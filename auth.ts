@@ -8,33 +8,33 @@ import bcrypt from 'bcrypt';
 
 async function getUser(email: string): Promise<User | undefined> {
     try {
-        const user = await sql<User>`SELECT *FROM users WHERE email=${email}`;
+        const user = await sql<User>`SELECT * FROM users WHERE email=${email}`;
         return user.rows[0];
-    }catch (error) {
+    }   catch (error) {
         console.error('Failed to fetch user:', error);
         throw new Error('Failed to fetch user.');
     }
 }
     
 export const { auth, signIn, signOut } = NextAuth({
-    ... authConfig,
+    ...authConfig,
     providers: [
     Credentials({
-    async authorize(Credentials) {
+    async authorize(credentials) {
     const parsedcredentials = z.object({ email: z.string().email(), password: z.string().min(6) })
-    .safeParse(Credentials);
+    .safeParse(credentials);
 
     if (parsedcredentials.success) {
     const { email, password } = parsedcredentials.data;
     const user = await getUser(email);
     if (!user) return null;
-    const passwordsMatch = await bcrypt. compare(password, user.password);
+    const passwordsMatch = await bcrypt.compare(password, user.password);
 
     if (passwordsMatch) return user;
-    }
+}
     return null;
 },
 
-}),
+    }),
 ],
 });

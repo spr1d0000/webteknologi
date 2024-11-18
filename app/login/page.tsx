@@ -1,16 +1,15 @@
 'use client'; //Penggunaan useActionState harus mencantumkan ini
-
 import { lusitana } from '@/app/ui/fonts';
 import Image from 'next/image';
 import {
     AtSymbolIcon,
-    KeyIcon,
+    KeyIcon,    
     ExclamationCircleIcon,
 } from '@heroicons/react/24/outline';
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Button } from '@/app/ui/button';
 import { useActionState } from 'react';
-import { authenticate } from '../lib/action'; //autentikasi
+import { authenticate } from 'app/lib/action'; //autentikasi
 export default function Page() {
     const [errorMessage, formAction, isPending] = useActionState(
         authenticate,
@@ -18,22 +17,23 @@ export default function Page() {
     );
     return (
         <main className="flex min-h-screen flex-col p-6">
-            <div className="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52">
-                <img
-                    src="/logo/uia-logo.png"
-                    width={500}
-                    height={360}
-                    className="hidden md:block"
-                    alt="Banner UIA"
-                />
-            </div>
-            <div className='flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20 m-auto'>
-                <form action={formAction} className= "space-y-3">
-                    <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
-                        <h1 className={`${lusitana.className} mb-3 text-2xl`}>
-                            Silahkan Masukan Akun Anda.
-                        </h1>
-                        <div className='w-full'>
+        <div className="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52">
+            <Image
+                src="/logo/uia-logo.png"
+                width={500}
+                height={360}
+                className="hidden md:block"
+                alt="Banner UIA"
+            />
+        </div>
+        <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20 m-auto">
+            <form action={formAction} className="space-y-3">
+                <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
+                    <h1 className={`${lusitana.className} mb-3 text-2xl`}>
+                        Silakan masuk dengan akun anda
+                    </h1>
+                    <div className="w-full">
+                        <div>
                             <label
                                 className="mb-3 mt-5 block text-xs font-medium text-gray-900"
                                 htmlFor="email"
@@ -45,11 +45,10 @@ export default function Page() {
                                     className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
                                     id="email"
                                     type="email"
-                                    name="email"
-                                    placeholder="Ketikkan alamat email"
+                                    name="email" placeholder="Ketikkan alamat email"
                                     required
                                 />
-                                <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                                <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray"></AtSymbolIcon>
                             </div>
                         </div>
                         <div className="mt-4">
@@ -61,7 +60,7 @@ export default function Page() {
                             </label>
                             <div className="relative">
                                 <input
-                                    className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
+                                    className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:tezt-gray-500"
                                     id="password"
                                     type="password"
                                     name="password"
@@ -69,34 +68,25 @@ export default function Page() {
                                     required
                                     minLength={6}
                                 />
-                                <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                                <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray"></KeyIcon>
                             </div>
                         </div>
                     </div>
-                    <button className='mt-4 w-full'>
-                        Masuk <ArrowRightIcon className='ml-auto h-5 w-5 text-gray-50' />
-                    </button>
-                    <div className='flex h-8 items-end space-x-1'>
-                        {/* Add form errors here */}
-                        <Button className="mt-4 w-full" aria-disabled={isPending}>
-                        Masuk <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50"/>
-                        </Button>
-                        <div className="flex h=8 items-end space-x-1">
+                    <Button className="mt-4 w-full" aria-disabled={isPending}>
+                        Masuk <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
+                    </Button>
+                    <div className="flex h-8 items-end space-x-1">
 
-
-                        {errorMessage && (
-                                <>
-                                <ExclamationCircleIcon className="h-5 w-5 text-red-500"/>
-                                <p className="text-sm text-red-500">{errorMessage}</p>
-                                </>
-                            )}
-
-                            
-                            
-                        </div>
+                    {errorMessage && (
+                        <>
+                        <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+                        <p className="text-sm text-red-500">{errorMessage}</p>
+                        </>
+                    )}    
                     </div>
-                </form>
-            </div>
-        </main>
-    );
+                </div>
+            </form >
+        </div >
+  </main >  
+);
 }
