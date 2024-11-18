@@ -28,10 +28,10 @@ export default function Page() {
                 />
             </div>
             <div className='flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20 m-auto'>
-                <form action={formAction} className='space-y-3'>
+                <form action={formAction} className= "space-y-3">
                     <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
                         <h1 className={`${lusitana.className} mb-3 text-2xl`}>
-                            Silahkan Masukan Account Anda.
+                            Silahkan Masukan Akun Anda.
                         </h1>
                         <div className='w-full'>
                             <label
@@ -77,12 +77,14 @@ export default function Page() {
                         Masuk <ArrowRightIcon className='ml-auto h-5 w-5 text-gray-50' />
                     </button>
                     <div className='flex h-8 items-end space-x-1'>
-                        {/* add form errors here */}
+                        {/* Add form errors here */}
                         <Button className="mt-4 w-full" aria-disabled={isPending}>
-                            Masuk <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50"/>
+                        Masuk <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50"/>
                         </Button>
                         <div className="flex h=8 items-end space-x-1">
-                            {errorMessage && (
+
+
+                        {errorMessage && (
                                 <>
                                 <ExclamationCircleIcon className="h-5 w-5 text-red-500"/>
                                 <p className="text-sm text-red-500">{errorMessage}</p>
