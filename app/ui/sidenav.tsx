@@ -15,7 +15,7 @@ export default function SideNav() {
       >
         <div className="w-32 text-white md:w-40">
           {/*<AcmeLogo />*/}
-          <img
+          <Image
             src="/logo/uia-logo.png"
             width={300}
             height={160}
