@@ -6,10 +6,10 @@ import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-const createInvoice = () => {
+const CreateInvoice = () => {
     // kode fungsi
   };
-  export default createInvoice;
+  export default CreateInvoice;
   
 // ...
 
