@@ -6,7 +6,6 @@ import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { UpdateInvoice } from '@/app/ui/dashboard/invoices/buttons';
 
 
 const FormSchema = z.object({
@@ -20,12 +19,13 @@ const FormSchema = z.object({
   const CreateInvoice = FormSchema.omit({ id: true, date: true }
 
   );
-
-const UpdateInvoiceSchema = z.object({
-  customer_id: z.string(),
-  amount: z.coerce.number(),
-  status: z.enum(['pending', 'paid']),
-});
+  const UpdateInvoiceSchema = z.object({
+    customer_id: z.string(),
+    amount: z.number(),
+    status: z.string(),
+  });
+  
+ 
 
 
  export async function createInvoice(formData: FormData) {
@@ -49,33 +49,27 @@ const UpdateInvoiceSchema = z.object({
 }
 
 export async function authenticate(
-  _prevState: string | undefined,
-  formData: FormData
-) {
-  
-  try {
-    await signIn('credentials', formData);
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          console.error('Invalid credentials.');
-          break;
+  prevState: string | undefined,
+  formData: FormData,
+){
+ try {
+  await signIn('credentials', formData);
+ } catch (error) {
+  if (error instanceof AuthError) {
+    switch (error.type) {
+      case 'CredentialsSignin':
+        return 'Invalid credentials.';
         default:
-          console.error('Something went wrong.');
-      }
+          return 'Something went wrong.';
     }
-    
-    
-    throw error;
   }
-  
+  throw error;
+ }
 }
-
 export async function updateInvoice(id: string, formData:FormData) {
-  const { customer_id,amount,status } = UpdateInvoiceSchema.parse({
-    customer_id: formData.get('customer_id'),
-    amount: formData.get('amount'),
+  const { customer_id, amount, status } = UpdateInvoiceSchema.parse({
+    customer_id: formData.get('customerId'),
+    amount: Number(formData.get('amount')),
     status: formData.get('statusbar'),
   });
   const amountInCents = amount * 100;
@@ -91,7 +85,7 @@ export async function updateInvoice(id: string, formData:FormData) {
 export async function deleteInvoice(id:string) {
   await sql`DELETE FROM invoices WHERE id = ${id}`;
   revalidatePath('/dashboard/invoices');
-  
+  redirect('/dashboard/invoices');
 }
 
 
