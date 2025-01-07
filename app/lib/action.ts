@@ -6,7 +6,8 @@ import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
-import { UpdateInvoice } from '../ui/dashboard/invoices/buttons';
+import { UpdateInvoice } from '@/app/ui/dashboard/invoices/buttons';
+
 
 const FormSchema = z.object({
     id: z.string(),
@@ -19,6 +20,13 @@ const FormSchema = z.object({
   const CreateInvoice = FormSchema.omit({ id: true, date: true }
 
   );
+
+const UpdateInvoiceSchema = z.object({
+  customer_id: z.string(),
+  amount: z.coerce.number(),
+  status: z.enum(['pending', 'paid']),
+});
+
 
  export async function createInvoice(formData: FormData) {
     const { customerId, amount, statusbar } = CreateInvoice.parse({
@@ -40,12 +48,29 @@ const FormSchema = z.object({
     
 }
 
-const UpdateInvoiceSchema = z.object({
-  customer_id: z.string(),
-  amount: z.coerce.number(),
-  status: z.enum(['pending', 'paid']),
-});
-
+export async function authenticate(
+  _prevState: string | undefined,
+  formData: FormData
+) {
+  
+  try {
+    await signIn('credentials', formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          console.error('Invalid credentials.');
+          break;
+        default:
+          console.error('Something went wrong.');
+      }
+    }
+    
+    
+    throw error;
+  }
+  
+}
 
 export async function updateInvoice(id: string, formData:FormData) {
   const { customer_id,amount,status } = UpdateInvoiceSchema.parse({
@@ -68,28 +93,6 @@ export async function deleteInvoice(id:string) {
   revalidatePath('/dashboard/invoices');
   
 }
-export async function authenticate(
-  prevState: string | undefined,
-  formData: FormData
-) {
-  
-  try {
-    await signIn('credentials', formData);
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          console.error('Invalid credentials.');
-          break;
-        default:
-          console.error('Something went wrong.');
-      }
-    }
-    
-    
-    throw error;
-  }
-  
-}
+
 
 
