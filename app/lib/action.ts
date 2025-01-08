@@ -22,7 +22,7 @@ const FormSchema = z.object({
   const UpdateInvoiceSchema = z.object({
     customer_id: z.string(),
     amount: z.number(),
-    status: z.string(),
+    status: z.enum(['pending', 'paid']),
   });
   
  
@@ -66,18 +66,21 @@ export async function authenticate(
   throw error;
  }
 }
-export async function updateInvoice(id: string, formData:FormData) {
+export async function updateInvoice(id: string, formData: FormData) {
+  const statusValue = formData.get('statusbar') || 'pending'; // Default value
+
   const { customer_id, amount, status } = UpdateInvoiceSchema.parse({
-    customer_id: formData.get('customerId'),
-    amount: Number(formData.get('amount')),
-    status: formData.get('statusbar'),
+      customer_id: formData.get('customerId'),
+      amount: Number(formData.get('amount')),
+      status: statusValue,
   });
+
   const amountInCents = amount * 100;
 
   await sql`
-  UPDATE Invoices
-  SET customer_id = ${customer_id}, amount = ${amountInCents}, status = ${status}
-  WHERE id = ${id}
+    UPDATE Invoices
+    SET customer_id = ${customer_id}, amount = ${amountInCents}, status = ${status}
+    WHERE id = ${id}
   `;
 }
 
