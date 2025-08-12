@@ -126,12 +126,12 @@ export default function LoginPage() {
                        Kok ga punya akun? Cepetan <Link href="/signup" className="font-times font-semibold text-blue-800 hover:text-blue-400 underline ml-1 "> Daftar </Link>
                     </div>
                     <div className="flex h-8 items-end space-x-1">
-                     {errorMessage ?(
+                     {errorMessage &&(
                     <>
                     <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
                     <p className="text-sm text-red-500">{errorMessage}</p>
                     </>
-                    ) : null}
+                    )}
                     </div>
 
                 </div>

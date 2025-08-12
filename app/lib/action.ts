@@ -12,7 +12,7 @@ const FormSchema = z.object({
     id: z.string(),
     customerId: z.string(),
     amount: z.coerce.number(),
-    statusbar: z.enum(['pending', 'paid']),
+    status: z.enum(['pending', 'paid']),
     date: z.string(),
   });
 
@@ -20,19 +20,18 @@ const FormSchema = z.object({
 
   );
   const UpdateInvoiceSchema = z.object({
-    customer_id: z.string(),
-    amount: z.number(),
+    customerId: z.string(),
+    amount: z.coerce.number(),
     status: z.enum(['pending', 'paid']),
   });
   
- 
-
 
  export async function createInvoice(formData: FormData) {
-    const { customerId, amount, statusbar } = CreateInvoice.parse({
+  
+    const { customerId, amount, status } = CreateInvoice.parse({
       customerId: formData.get('customerId'),
       amount: formData.get('amount'),
-      statusbar: formData.get('statusbar'),
+      status: formData.get('status'),
     });
     
     const amountInCents = amount * 100;
@@ -40,7 +39,7 @@ const FormSchema = z.object({
 
     await sql`
       INSERT INTO Invoices (customer_id, amount, status, date)
-      VALUES (${customerId}, ${amountInCents}, ${statusbar}, ${date})
+      VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
     `;
 
     revalidatePath('/dashboard/invoices');
@@ -67,10 +66,10 @@ export async function authenticate(
  }
 }
 export async function updateInvoice(id: string, formData: FormData) {
-  const statusValue = formData.get('statusbar') || 'pending'; // Default value
+  const statusValue = formData.get('status') || 'pending'; // Default value
 
-  const { customer_id, amount, status } = UpdateInvoiceSchema.parse({
-      customer_id: formData.get('customerId'),
+  const { customerId, amount, status } = UpdateInvoiceSchema.parse({
+      customerId: formData.get('customerId'),
       amount: Number(formData.get('amount')),
       status: statusValue,
   });
@@ -79,7 +78,7 @@ export async function updateInvoice(id: string, formData: FormData) {
 
   await sql`
     UPDATE Invoices
-    SET customer_id = ${customer_id}, amount = ${amountInCents}, status = ${status}
+    SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
     WHERE id = ${id}
   `;
 }
